@@ -9,3 +9,6 @@ langchain_groq
 langchain_openai
 langchain_groq
 sentence-transformers
+fitz
+pymupdf
+uvicorn

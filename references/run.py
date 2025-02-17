@@ -1,14 +1,14 @@
-from back import FastAPI, File, UploadFile, HTTPException, Depends
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
 import os
 import random
 
-from references.extract_pdf_text import extract_text_from_pdf  # Ensure this exists
-from references.generate_embeddings import get_pdf_embedding  # Ensure this exists
-from references.faiss_index import create_faiss_index, add_to_index, search_index  # Ensure these exist
-from references.random_selector import select_random_pdf  # Ensure this exists
+from extract_pdf_text import extract_text_from_pdf  # Ensure this exists
+from generate_embeddings import get_pdf_embedding  # Ensure this exists
+from faiss_index import create_faiss_index, add_to_index, search_index  # Ensure these exist
+from random_selector import select_random_pdf  # Ensure this exists
 
 app = FastAPI()
 
@@ -163,4 +163,4 @@ async def submit_diagnosis(diagnosis_submission: DiagnosisSubmission):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
