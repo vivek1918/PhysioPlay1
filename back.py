@@ -29,7 +29,7 @@ DIAGNOSTIC_KEYWORDS = [
 
 # Initialize session state
 class SessionState:
-    def _init_(self):
+    def __init__(self):
         self.case_loaded = False
         self.vectors = None
         self.chat_history = []
@@ -220,6 +220,6 @@ async def websocket_endpoint(websocket: WebSocket):
 async def get():
     return HTMLResponse(content=open("index.html").read())
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
