@@ -130,8 +130,7 @@
         const diagnosisButtonContainer = document.getElementById('diagnosis-button-container');
         const diagnosisButton = document.getElementById('diagnosis-button');
 
-        const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        const ws = new WebSocket(protocol + window.location.host + "/ws");
+        const ws = new WebSocket('ws://localhost:8000/ws');
 
         // Function to append a message to the chat
         function appendMessage(role, content) {
@@ -148,13 +147,24 @@
         // Handle incoming WebSocket messages
         ws.onmessage = (event) => {
             const data = event.data;
-            try {
-                const message = JSON.parse(data);
-                if (message.role && message.content) {
-                    appendMessage(message.role, message.content);
+            if (typeof data === 'string') {
+                try {
+                    const message = JSON.parse(data);
+                    if (message.role && message.content) {
+                        appendMessage(message.role, message.content);
+                    } else if (data === "Submit Diagnosis") {
+                        diagnosisButtonContainer.style.display = 'block';
+                    } else if (data.startsWith("Enter your diagnosis:")) {
+                        const userDiagnosis = prompt(data);
+                        if (userDiagnosis) {
+                            ws.send(userDiagnosis);
+                        }
+                    } else {
+                        appendMessage('assistant', data);
+                    }
+                } catch (e) {
+                    appendMessage('assistant', data);
                 }
-            } catch (e) {
-                appendMessage('assistant', data);
             }
         };
 
@@ -171,7 +181,12 @@
         // Send message when Enter key is pressed
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                chatSendButton.click();
+                const message = chatInput.value.trim();
+                if (message) {
+                    ws.send(message);
+                    appendMessage('user', message);
+                    chatInput.value = '';
+                }
             }
         });
 
